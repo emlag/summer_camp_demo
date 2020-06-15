@@ -25,6 +25,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import edu.cis.demo.Constants;
 import edu.cis.demo.DemoGame;
+import edu.cis.demo.Sprites.Player;
 
 public class LevelOne implements Screen
 {
@@ -39,6 +40,9 @@ public class LevelOne implements Screen
 
     private OrthographicCamera camera;
     private Viewport viewport;
+
+    //sprites
+    private Player player;
 
     public LevelOne(DemoGame game)
     {
@@ -57,8 +61,10 @@ public class LevelOne implements Screen
         Gdx.app.log("height", "" + viewport.getWorldHeight() / 2);
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0); //set init game cam position
 
-        world = new World(new Vector2(0,0), true); //gravity, don't calculate bodies that are at rest
+        world = new World(new Vector2(0,-10), true); //gravity, don't calculate bodies that are at rest
         box2DDebugRenderer = new Box2DDebugRenderer();
+
+        player = new Player(world); //add this
 
         BodyDef bodyDef = new BodyDef();
         PolygonShape shape = new PolygonShape();
@@ -88,6 +94,8 @@ public class LevelOne implements Screen
 
     private void update(float dt)
     {
+        world.step(1/60f, 6, 2); //add this
+
         camera.update();
         renderer.setView(camera); //sets the view from our camera so it would render only what our camera can see.
     }
@@ -106,12 +114,12 @@ public class LevelOne implements Screen
         update(delta);
         handleInput(delta);
 
-        //add a b2d renderer
-        box2DDebugRenderer.render(world, camera.combined);
-
         //clear screen
         Gdx.gl.glClearColor(0, 0 , 0 ,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        //add a b2d renderer
+        box2DDebugRenderer.render(world, camera.combined);
 
         renderer.render();
 
