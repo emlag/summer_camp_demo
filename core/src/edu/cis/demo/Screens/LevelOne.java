@@ -6,9 +6,20 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -18,7 +29,9 @@ import edu.cis.demo.DemoGame;
 public class LevelOne implements Screen
 {
     DemoGame myGame;
-    Texture myPicture;
+
+    private World world; //add this
+    private Box2DDebugRenderer box2DDebugRenderer;
 
     private TmxMapLoader mapLoader;
     private TiledMap map;
@@ -30,7 +43,6 @@ public class LevelOne implements Screen
     public LevelOne(DemoGame game)
     {
         this.myGame = game;
-        //loadMap();
 
         mapLoader = new TmxMapLoader(); //create an instance of built-in map loader object
         map = mapLoader.load(Constants.MAP_FILENAME); //using map loader object, load the tiled map that you made
@@ -45,6 +57,26 @@ public class LevelOne implements Screen
         Gdx.app.log("height", "" + viewport.getWorldHeight() / 2);
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0); //set init game cam position
 
+        world = new World(new Vector2(0,0), true); //gravity, don't calculate bodies that are at rest
+        box2DDebugRenderer = new Box2DDebugRenderer();
+
+        BodyDef bodyDef = new BodyDef();
+        PolygonShape shape = new PolygonShape();
+        FixtureDef fixtureDef = new FixtureDef();
+        Body body;
+
+        //for ground
+        for(MapObject mapObject : map.getLayers().get(Constants.GROUND_LAYER).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rectangle = ((RectangleMapObject) mapObject).getRectangle();
+            bodyDef.type = BodyDef.BodyType.StaticBody;
+            bodyDef.position.set(rectangle.getX() + rectangle.getWidth() / 2,
+                    rectangle.getY() + rectangle.getHeight() / 2);
+
+            body = world.createBody(bodyDef);
+            shape.setAsBox(rectangle.getWidth() / 2, rectangle.getHeight() / 2);
+            fixtureDef.shape = shape;
+            body.createFixture(fixtureDef);
+        }
     }
 
     private void loadMap()
@@ -73,6 +105,9 @@ public class LevelOne implements Screen
     {
         update(delta);
         handleInput(delta);
+
+        //add a b2d renderer
+        box2DDebugRenderer.render(world, camera.combined);
 
         //clear screen
         Gdx.gl.glClearColor(0, 0 , 0 ,1);
