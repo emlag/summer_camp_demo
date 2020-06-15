@@ -48,17 +48,10 @@ public class LevelOne implements Screen
     {
         this.myGame = game;
 
-        mapLoader = new TmxMapLoader(); //create an instance of built-in map loader object
-        map = mapLoader.load(Constants.MAP_FILENAME); //using map loader object, load the tiled map that you made
-        renderer = new OrthogonalTiledMapRenderer(map); //render the map.
-
-        Gdx.app.log("load map", "ok");
+        loadMap();
 
         camera = new OrthographicCamera();
         viewport = new FitViewport(Constants.WIDTH, Constants.HEIGHT, camera);
-
-        Gdx.app.log("width", "" + viewport.getWorldWidth() / 2);
-        Gdx.app.log("height", "" + viewport.getWorldHeight() / 2);
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0); //set init game cam position
 
         world = new World(new Vector2(0,-10), true); //gravity, don't calculate bodies that are at rest
@@ -118,10 +111,10 @@ public class LevelOne implements Screen
         Gdx.gl.glClearColor(0, 0 , 0 ,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        renderer.render();
+
         //add a b2d renderer
         box2DDebugRenderer.render(world, camera.combined);
-
-        renderer.render();
 
         myGame.getBatch().begin(); //open batch
 
@@ -165,6 +158,7 @@ public class LevelOne implements Screen
     {
         map.dispose();
         renderer.dispose();
-
+        world.dispose();
+        box2DDebugRenderer.dispose();
     }
 }
