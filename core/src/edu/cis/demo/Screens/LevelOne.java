@@ -98,7 +98,13 @@ public class LevelOne implements Screen
     {
         if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) //if up button pressed)
         {
-            camera.position.x += 5 * 16; //move 5 tiles per right press
+//            camera.position.x += 5 * 16; //move 5 tiles per right press
+            Vector2 force = new Vector2(100f, 0);
+
+            Gdx.app.log("right key", "ok");
+
+
+            player.box2Body.applyLinearImpulse(force, player.box2Body.getWorldCenter(), true);
         }
     }
     @Override
