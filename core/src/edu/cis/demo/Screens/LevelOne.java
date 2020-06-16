@@ -96,22 +96,27 @@ public class LevelOne implements Screen
     //TEMP METHOD TO SHOW ENTIRE MAP
     private void handleInput(float dt)
     {
-        if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) //if up button pressed)
+        if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) //if up button pressed
         {
-//            camera.position.x += 5 * 16; //move 5 tiles per right press
-            Vector2 force = new Vector2(100f, 0);
-
-            Gdx.app.log("right key", "ok");
-
-
-            player.box2Body.applyLinearImpulse(force, player.box2Body.getWorldCenter(), true);
+            //2 ways to move objects in box2d, force (gradual change), and impulse (immediate change)
+            //2nd arg: where you want to apply the impulse.  Applying it at center bcs we don't want torque
+            //3rd arg: true = want to wake body up
+            player.box2Body.applyLinearImpulse(new Vector2(0, 15f), player.box2Body.getWorldCenter(), true);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.box2Body.getLinearVelocity().x <= 10f) //if right key is being pressed or held down
+        {
+            player.box2Body.applyLinearImpulse(new Vector2(10f, 0), player.box2Body.getWorldCenter(), true);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.box2Body.getLinearVelocity().x >= -10f) //if left key is being pressed or held down
+        {
+            player.box2Body.applyLinearImpulse(new Vector2(-10f, 0), player.box2Body.getWorldCenter(), true);
         }
     }
     @Override
     public void render(float delta)
     {
-        update(delta);
         handleInput(delta);
+        update(delta);
 
         //clear screen
         Gdx.gl.glClearColor(0, 0 , 0 ,1);
