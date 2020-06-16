@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import edu.cis.demo.Screens.LevelOne;
+import edu.cis.demo.Screens.LevelTwo;
 
 
 public class DemoGame extends Game
@@ -20,7 +21,7 @@ public class DemoGame extends Game
 	public void create () {
 		batch = new SpriteBatch();
 
-		currentScreen = new LevelOne(this);
+		currentScreen = new LevelTwo(this);
 		setScreen(currentScreen);
 	}
 
