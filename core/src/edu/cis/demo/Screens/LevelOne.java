@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -17,7 +16,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -26,6 +24,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import edu.cis.demo.Constants;
 import edu.cis.demo.DemoGame;
+import edu.cis.demo.Hud;
 import edu.cis.demo.Sprites.Player;
 
 public class LevelOne implements Screen
@@ -38,6 +37,8 @@ public class LevelOne implements Screen
     private TmxMapLoader mapLoader;
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
+
+    private Hud hud;
 
     private OrthographicCamera camera;
     private Viewport viewport;
@@ -52,6 +53,7 @@ public class LevelOne implements Screen
         atlas = new TextureAtlas(Constants.ATLAS_FILENAME);
 
         this.myGame = game;
+        this.hud = new Hud();
 
         loadMap();
 
@@ -139,9 +141,12 @@ public class LevelOne implements Screen
         box2DDebugRenderer.render(world, camera.combined);
 
         myGame.getBatch().begin(); //open batch
+
         player.draw(myGame.batch);
 
         myGame.getBatch().end(); //close the batch
+
+        hud.getStage().draw();
 
         myGame.getBatch().setProjectionMatrix(camera.combined); //updates our batch with our Camera's view and projection matrices.
     }
