@@ -25,6 +25,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.cis.demo.Constants;
 import edu.cis.demo.DemoGame;
 import edu.cis.demo.Hud;
+import edu.cis.demo.Sprites.Enemy;
 import edu.cis.demo.Sprites.Player;
 
 public class LevelOne implements Screen
@@ -45,6 +46,7 @@ public class LevelOne implements Screen
 
     //sprites
     private Player player;
+    private Enemy goomba;
     //atlas
     private TextureAtlas atlas;
 
@@ -65,6 +67,7 @@ public class LevelOne implements Screen
         box2DDebugRenderer = new Box2DDebugRenderer();
 
         player = new Player(world, this); //change this
+        goomba = new Enemy(world, this, 50, 50);
 
         BodyDef bodyDef = new BodyDef();
         PolygonShape shape = new PolygonShape();
@@ -101,12 +104,12 @@ public class LevelOne implements Screen
         world.step(1/60f, 6, 2); //add this
 
         player.update(dt);
+        goomba.update(dt);
 
         camera.update();
         renderer.setView(camera); //sets the view from our camera so it would render only what our camera can see.
     }
 
-    //TEMP METHOD TO SHOW ENTIRE MAP
     private void handleInput(float dt)
     {
         if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) //if up button pressed
@@ -143,6 +146,7 @@ public class LevelOne implements Screen
         myGame.getBatch().begin(); //open batch
 
         player.draw(myGame.batch);
+        goomba.draw(myGame.batch);
 
         myGame.getBatch().end(); //close the batch
 

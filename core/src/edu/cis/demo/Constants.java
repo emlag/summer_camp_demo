@@ -1,5 +1,6 @@
 package edu.cis.demo;
 
+
 public class Constants
 {
     public static final int WIDTH = 20 * 16;
@@ -8,6 +9,7 @@ public class Constants
     //add this
     public static final String ATLAS_FILENAME = "Mario_and_Enemies.atlas";
     public static final String LITTLE_MARIO_STRING = "little_mario";
+    public static final String GOOMBA_STRING = "goomba";
 
 
     public static final int GROUND_LAYER = 2;
