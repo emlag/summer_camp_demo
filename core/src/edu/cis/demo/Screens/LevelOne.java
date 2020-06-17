@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -43,9 +44,13 @@ public class LevelOne implements Screen
 
     //sprites
     private Player player;
+    //atlas
+    private TextureAtlas atlas;
 
     public LevelOne(DemoGame game)
     {
+        atlas = new TextureAtlas(Constants.ATLAS_FILENAME);
+
         this.myGame = game;
 
         loadMap();
@@ -57,7 +62,7 @@ public class LevelOne implements Screen
         world = new World(new Vector2(0,-10), true); //gravity, don't calculate bodies that are at rest
         box2DDebugRenderer = new Box2DDebugRenderer();
 
-        player = new Player(world); //add this
+        player = new Player(world, this); //change this
 
         BodyDef bodyDef = new BodyDef();
         PolygonShape shape = new PolygonShape();
@@ -78,6 +83,10 @@ public class LevelOne implements Screen
         }
     }
 
+    public TextureAtlas getAtlas(){
+        return atlas;
+    }
+
     private void loadMap()
     {
         mapLoader = new TmxMapLoader(); //create an instance of built-in map loader object
@@ -88,6 +97,8 @@ public class LevelOne implements Screen
     private void update(float dt)
     {
         world.step(1/60f, 6, 2); //add this
+
+        player.update(dt);
 
         camera.update();
         renderer.setView(camera); //sets the view from our camera so it would render only what our camera can see.
@@ -128,6 +139,7 @@ public class LevelOne implements Screen
         box2DDebugRenderer.render(world, camera.combined);
 
         myGame.getBatch().begin(); //open batch
+        player.draw(myGame.batch);
 
         myGame.getBatch().end(); //close the batch
 

@@ -35,11 +35,9 @@ public class LevelTwo implements Screen
         map = mapLoader.load(Constants.MAP_FILENAME);
         renderer = new OrthogonalTiledMapRenderer(map);
 
-
         camera = new OrthographicCamera();
         viewport = new FitViewport(Constants.WIDTH, Constants.HEIGHT, camera);
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
-
     }
 
     private void update(float deltaTime)

@@ -14,14 +14,14 @@ import edu.cis.demo.Screens.LevelTwo;
 
 public class DemoGame extends Game
 {
-	SpriteBatch batch;
+	public SpriteBatch batch;
 	Screen currentScreen;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 
-		currentScreen = new LevelTwo(this);
+		currentScreen = new LevelOne(this); //TODO: change before lesson tomorrow
 		setScreen(currentScreen);
 	}
 
