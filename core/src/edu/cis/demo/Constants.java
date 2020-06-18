@@ -25,5 +25,7 @@ public class Constants
     public static final int GOOMBA_ANIM_STRT = 0;
     public static final int GOOMBA_ANIM_END = 2;
 
-
+    //collision
+    public static final Integer PLAYER_ID = 99;
+    public static final Integer GOOMBA_ID = 98;
 }

@@ -26,6 +26,8 @@ public class Player extends Sprite {
     private TextureRegion marioJump;
     private Animation<TextureRegion> growMario;
 
+    //collisions
+
     //states
     public enum State {FALLING, JUMPING, STANDING, RUNNING};
     public State currentState;
@@ -77,7 +79,8 @@ public class Player extends Sprite {
         shape.setRadius(8); //you can change these values as you want
 
         fixtureDef.shape = shape;
-        box2Body.createFixture(fixtureDef);
+        box2Body.createFixture(fixtureDef).setUserData(this);
+
     }
 
     //returns appropriate frame needed to display as sprite's texture region
@@ -145,4 +148,6 @@ public class Player extends Sprite {
         setPosition(box2Body.getPosition().x - getWidth() / 2, box2Body.getPosition().y - getHeight() / 2);
         setRegion(getFrame(dt));
     }
+
+
 }
