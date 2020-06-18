@@ -20,10 +20,14 @@ public class Hud
     private Table table;
 
     private int score;
+    private int currentTime;
+    private float totalDeltaTime;
 
     private Label levelLabel;
+    private Label timeLabel;
     private Label scoreLabel;
     private Label levelNumberLabel;
+    private Label timeNumberLabel;
     private Label scoreNumberLabel;
 
     private TextButton tempButton;
@@ -41,10 +45,14 @@ public class Hud
         table.debug();
 
         score = 0;
+        currentTime = 300;
+        totalDeltaTime = 0;
         Label.LabelStyle labelStyle = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
         levelLabel = new Label("LEVEL", labelStyle);
+        timeLabel = new Label("TIME", labelStyle);
         scoreLabel = new Label("SCORE", labelStyle);
         levelNumberLabel = new Label("1-1", labelStyle);
+        timeNumberLabel = new Label("" + currentTime, labelStyle);
         scoreNumberLabel = new Label("" + score, labelStyle);
 
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
@@ -62,14 +70,38 @@ public class Hud
         });
 
         table.add(levelLabel).expandX().padTop(10);
+        table.add(timeLabel).expandX().padTop(10);
         table.add(scoreLabel).expandX().padTop(10);
         table.row();
         table.add(levelNumberLabel).expandX();
+        table.add(timeNumberLabel).expandX();
         table.add(scoreNumberLabel).expandX();
         table.row();
-        table.add(tempButton).colspan(2).fill();
+        table.add(tempButton).colspan(3).fill();
 
         stage.addActor(table);
+    }
+
+    public void update(float deltaTime)
+    {
+        totalDeltaTime += deltaTime;
+        if(totalDeltaTime >= 1)
+        {
+            currentTime--;
+            timeNumberLabel.setText("" + currentTime);
+            totalDeltaTime = 0;
+        }
+    }
+
+    public int getScore()
+    {
+        return score;
+    }
+
+    public void setScore(int score)
+    {
+        this.score = score;
+        scoreNumberLabel.setText("" + score);
     }
 
     public Stage getStage()

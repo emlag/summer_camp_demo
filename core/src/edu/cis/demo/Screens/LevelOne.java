@@ -112,6 +112,7 @@ public class LevelOne implements Screen
         goomba.update(dt);
         goomba2.update(dt);
 
+        hud.update(dt);
         camera.update();
         renderer.setView(camera); //sets the view from our camera so it would render only what our camera can see.
     }
@@ -199,5 +200,10 @@ public class LevelOne implements Screen
         renderer.dispose();
         world.dispose();
         box2DDebugRenderer.dispose();
+    }
+
+    public Hud getHud()
+    {
+        return hud;
     }
 }

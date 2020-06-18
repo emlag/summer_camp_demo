@@ -13,9 +13,11 @@ import com.badlogic.gdx.utils.Array;
 
 import edu.cis.demo.Constants;
 import edu.cis.demo.Screens.LevelOne;
+import edu.cis.demo.Utils.Utils;
 
 public class Player extends Sprite {
     private World world;
+    private LevelOne screen;
     public Body box2Body;
 
     //texture regions
@@ -39,6 +41,7 @@ public class Player extends Sprite {
         super(screen.getAtlas().findRegion(Constants.LITTLE_MARIO_STRING));
 
         this.world = world;
+        this.screen = screen;
         runningToRight = true;
 
         currentState = State.STANDING;
@@ -149,5 +152,9 @@ public class Player extends Sprite {
         setRegion(getFrame(dt));
     }
 
+    public void onEnemyHit()
+    {
+        Utils.addScore(100, screen.getHud());
+    }
 
 }
