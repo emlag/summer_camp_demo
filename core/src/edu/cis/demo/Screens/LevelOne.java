@@ -139,7 +139,7 @@ public class LevelOne implements Screen
         box2DDebugRenderer.render(world, camera.combined);
 
         myGame.getBatch().begin(); //open batch
-        player.draw(myGame.batch);
+        player.draw(myGame.getBatch());
 
         myGame.getBatch().end(); //close the batch
 

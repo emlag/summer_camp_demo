@@ -5,8 +5,10 @@ public class Constants
     public static final int WIDTH = 20 * 16;
     public static final int HEIGHT = 11 * 16;
     public static final String MAP_FILENAME = "level1.tmx";
-    //add this
-    public static final String ATLAS_FILENAME = "Mario_and_Enemies.atlas";
+
+    //atlas name
+    public static final String ATLAS_FILENAME = "sprites.atlas";
+    //sprite names
     public static final String LITTLE_MARIO_STRING = "little_mario";
 
 

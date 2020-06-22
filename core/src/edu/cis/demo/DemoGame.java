@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import edu.cis.demo.Screens.LevelOne;
@@ -14,14 +15,14 @@ import edu.cis.demo.Screens.LevelTwo;
 
 public class DemoGame extends Game
 {
-	public SpriteBatch batch;
+	private SpriteBatch batch;
 	Screen currentScreen;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 
-		currentScreen = new LevelOne(this); //TODO: change before lesson tomorrow
+		currentScreen = new LevelOne(this);
 		setScreen(currentScreen);
 	}
 
@@ -39,4 +40,5 @@ public class DemoGame extends Game
 	public void dispose () {
 		batch.dispose();
 	}
+
 }

@@ -19,7 +19,7 @@ public class Player extends Sprite {
     public Body box2Body;
 
     //texture regions
-    private TextureRegion marioStand;
+    private TextureRegion playerIdleTexture;
 
     //animation frames
     private Animation<TextureRegion> marioRun;
@@ -36,10 +36,14 @@ public class Player extends Sprite {
     public Player(World world, LevelOne screen) {
         super(screen.getAtlas().findRegion(Constants.LITTLE_MARIO_STRING));
 
-        this.world = world;
-        runningToRight = true;
+        playerIdleTexture = new TextureRegion(screen.getAtlas()
+                .findRegion(Constants.LITTLE_MARIO_STRING), 0, 0, 16, 16);
 
         currentState = State.STANDING;
+        runningToRight = true;
+
+        this.world = world;
+
         previousState = State.STANDING;
         stateTimer = 0;
 
@@ -57,12 +61,12 @@ public class Player extends Sprite {
         //for jump animations
         marioJump = new TextureRegion(screen.getAtlas().findRegion(Constants.LITTLE_MARIO_STRING), 80, 0, 16, 16);
 
-        marioStand = new TextureRegion(screen.getAtlas().findRegion(Constants.LITTLE_MARIO_STRING), 0, 0, 16, 16);
+        playerIdleTexture = new TextureRegion(screen.getAtlas().findRegion(Constants.LITTLE_MARIO_STRING), 0, 0, 16, 16);
 
         definePlayerBox2d(); //add this
 
         setBounds(0, 0, 16, 16);
-        setRegion(marioStand);
+        setRegion(playerIdleTexture);
     }
 
     public void definePlayerBox2d()
@@ -98,7 +102,7 @@ public class Player extends Sprite {
             case FALLING:
             case STANDING:
             default:
-                region = marioStand;
+                region = playerIdleTexture;
                 break;
         }
 
