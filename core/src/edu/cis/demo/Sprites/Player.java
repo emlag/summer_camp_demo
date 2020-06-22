@@ -4,9 +4,12 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -31,11 +34,14 @@ public class Player extends Sprite {
     //collisions
 
     //states
-    public enum State {FALLING, JUMPING, STANDING, RUNNING};
+    public enum State {FALLING, JUMPING, STANDING, RUNNING, DEAD};
     public State currentState;
     public State previousState;
     private float stateTimer;
     private boolean runningToRight;
+
+    private TextureRegion marioDead;
+    private boolean playerIsDead;
 
     public Player(World world, LevelOne screen) {
         super(screen.getAtlas().findRegion(Constants.LITTLE_MARIO_STRING));
@@ -64,6 +70,8 @@ public class Player extends Sprite {
 
         //for jump animations
         marioJump = new TextureRegion(screen.getAtlas().findRegion(Constants.LITTLE_MARIO_STRING), 80, 0, 16, 16);
+
+        marioDead = new TextureRegion(screen.getAtlas().findRegion(Constants.LITTLE_MARIO_STRING), 96, 0, 16, 16);
 
         playerIdleTexture = new TextureRegion(screen.getAtlas().findRegion(Constants.LITTLE_MARIO_STRING), 0, 0, 16, 16);
 
@@ -96,6 +104,9 @@ public class Player extends Sprite {
         TextureRegion region;
         switch(currentState)
         {
+            case DEAD:
+                region = marioDead;
+                break;
             case JUMPING:
                 region = marioJump;
                 break;
@@ -133,7 +144,11 @@ public class Player extends Sprite {
 
     public State getState()
     {
-        if(box2Body.getLinearVelocity().y > 0 || box2Body.getLinearVelocity().y < 0 && previousState == State.JUMPING)
+        if(playerIsDead)
+        {
+            return State.DEAD;
+        }
+        else if(box2Body.getLinearVelocity().y > 0 || box2Body.getLinearVelocity().y < 0 && previousState == State.JUMPING)
         {
             return State.JUMPING;
         }
@@ -158,6 +173,13 @@ public class Player extends Sprite {
     public void onEnemyHit()
     {
         Utils.addScore(100, screen.getHud());
+        playerIsDead = true;
+        Filter filter = new Filter();
+        filter.maskBits = Constants.NOTHING_BIT; //can't collide with anything
+        for (Fixture fixture : box2Body.getFixtureList()) {
+            fixture.setFilterData(filter);
+        }
+        box2Body.applyLinearImpulse(new Vector2(0, 4f), box2Body.getWorldCenter(), true); //for Mario to jump up when he dies
     }
 
 }

@@ -19,6 +19,8 @@ public class Constants
     public static final int COINS_LAYER = 4;
     public static final int BRICKS_LAYER = 5;
 
+    public static final int NOTHING_BIT = 0;
+
     //movement animation sprites
     public static final int RUN_ANIM_STRT = 1;
     public static final int RUN_ANIM_END = 4;
