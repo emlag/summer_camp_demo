@@ -1,5 +1,6 @@
 package edu.cis.demo;
 
+
 public class Constants
 {
     public static final int WIDTH = 20 * 16;
@@ -10,6 +11,7 @@ public class Constants
     public static final String ATLAS_FILENAME = "sprites.atlas";
     //sprite names
     public static final String LITTLE_MARIO_STRING = "little_mario";
+    public static final String GOOMBA_STRING = "goomba";
 
 
     public static final int GROUND_LAYER = 2;
@@ -25,5 +27,7 @@ public class Constants
     public static final int GOOMBA_ANIM_STRT = 0;
     public static final int GOOMBA_ANIM_END = 2;
 
-
+    //collision
+    public static final Integer PLAYER_ID = 99;
+    public static final Integer GOOMBA_ID = 98;
 }

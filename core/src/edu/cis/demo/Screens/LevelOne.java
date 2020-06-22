@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -17,7 +16,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -26,7 +24,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import edu.cis.demo.Constants;
 import edu.cis.demo.DemoGame;
+import edu.cis.demo.Hud;
+import edu.cis.demo.Sprites.Enemy;
 import edu.cis.demo.Sprites.Player;
+import edu.cis.demo.Utils.WorldContactListener;
 
 public class LevelOne implements Screen
 {
@@ -39,11 +40,16 @@ public class LevelOne implements Screen
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
 
+    private Hud hud;
+
     private OrthographicCamera camera;
     private Viewport viewport;
 
     //sprites
     private Player player;
+    private Enemy goomba;
+    private Enemy goomba2;
+
     //atlas
     private TextureAtlas atlas;
 
@@ -52,6 +58,7 @@ public class LevelOne implements Screen
         atlas = new TextureAtlas(Constants.ATLAS_FILENAME);
 
         this.myGame = game;
+        this.hud = new Hud();
 
         loadMap();
 
@@ -60,9 +67,12 @@ public class LevelOne implements Screen
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0); //set init game cam position
 
         world = new World(new Vector2(0,-10), true); //gravity, don't calculate bodies that are at rest
+        world.setContactListener(new WorldContactListener());
         box2DDebugRenderer = new Box2DDebugRenderer();
 
         player = new Player(world, this); //change this
+        goomba = new Enemy(world, this, 50 , 30);
+        goomba2 = new Enemy(world,this, 70, 30);
 
         BodyDef bodyDef = new BodyDef();
         PolygonShape shape = new PolygonShape();
@@ -99,12 +109,14 @@ public class LevelOne implements Screen
         world.step(1/60f, 6, 2); //add this
 
         player.update(dt);
+        goomba.update(dt);
+        goomba2.update(dt);
 
+        hud.update(dt);
         camera.update();
         renderer.setView(camera); //sets the view from our camera so it would render only what our camera can see.
     }
 
-    //TEMP METHOD TO SHOW ENTIRE MAP
     private void handleInput(float dt)
     {
         if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) //if up button pressed
@@ -183,5 +195,10 @@ public class LevelOne implements Screen
         renderer.dispose();
         world.dispose();
         box2DDebugRenderer.dispose();
+    }
+
+    public Hud getHud()
+    {
+        return hud;
     }
 }

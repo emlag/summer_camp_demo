@@ -13,9 +13,11 @@ import com.badlogic.gdx.utils.Array;
 
 import edu.cis.demo.Constants;
 import edu.cis.demo.Screens.LevelOne;
+import edu.cis.demo.Utils.Utils;
 
 public class Player extends Sprite {
     private World world;
+    private LevelOne screen;
     public Body box2Body;
 
     //texture regions
@@ -25,6 +27,8 @@ public class Player extends Sprite {
     private Animation<TextureRegion> marioRun;
     private TextureRegion marioJump;
     private Animation<TextureRegion> growMario;
+
+    //collisions
 
     //states
     public enum State {FALLING, JUMPING, STANDING, RUNNING};
@@ -38,11 +42,11 @@ public class Player extends Sprite {
 
         playerIdleTexture = new TextureRegion(screen.getAtlas()
                 .findRegion(Constants.LITTLE_MARIO_STRING), 0, 0, 16, 16);
-
-        currentState = State.STANDING;
+        this.world = world;
+        this.screen = screen;
         runningToRight = true;
 
-        this.world = world;
+        currentState = State.STANDING;
 
         previousState = State.STANDING;
         stateTimer = 0;
@@ -81,7 +85,8 @@ public class Player extends Sprite {
         shape.setRadius(8); //you can change these values as you want
 
         fixtureDef.shape = shape;
-        box2Body.createFixture(fixtureDef);
+        box2Body.createFixture(fixtureDef).setUserData(this);
+
     }
 
     //returns appropriate frame needed to display as sprite's texture region
@@ -149,4 +154,10 @@ public class Player extends Sprite {
         setPosition(box2Body.getPosition().x - getWidth() / 2, box2Body.getPosition().y - getHeight() / 2);
         setRegion(getFrame(dt));
     }
+
+    public void onEnemyHit()
+    {
+        Utils.addScore(100, screen.getHud());
+    }
+
 }
