@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import edu.cis.demo.Constants;
 import edu.cis.demo.DemoGame;
+import edu.cis.demo.GameState;
 import edu.cis.demo.Hud;
 import edu.cis.demo.Sprites.Enemy;
 import edu.cis.demo.Sprites.Player;
@@ -53,6 +54,8 @@ public class LevelOne implements Screen
     //atlas
     private TextureAtlas atlas;
 
+    public float timer = 0;
+
     public LevelOne(DemoGame game)
     {
         atlas = new TextureAtlas(Constants.ATLAS_FILENAME);
@@ -66,7 +69,7 @@ public class LevelOne implements Screen
         viewport = new FitViewport(Constants.WIDTH, Constants.HEIGHT, camera);
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0); //set init game cam position
 
-        world = new World(new Vector2(0,-10), true); //gravity, don't calculate bodies that are at rest
+        world = new World(new Vector2(0,-20), true); //gravity, don't calculate bodies that are at rest
         world.setContactListener(new WorldContactListener());
         box2DDebugRenderer = new Box2DDebugRenderer();
 
@@ -113,6 +116,7 @@ public class LevelOne implements Screen
         goomba2.update(dt);
 
         hud.update(dt);
+        camera.position.x = player.box2Body.getPosition().x;
         camera.update();
         renderer.setView(camera); //sets the view from our camera so it would render only what our camera can see.
     }
@@ -124,17 +128,19 @@ public class LevelOne implements Screen
             //2 ways to move objects in box2d, force (gradual change), and impulse (immediate change)
             //2nd arg: where you want to apply the impulse.  Applying it at center bcs we don't want torque
             //3rd arg: true = want to wake body up
-            player.box2Body.applyLinearImpulse(new Vector2(0, 15f), player.box2Body.getWorldCenter(), true);
+            player.box2Body.applyLinearImpulse(new Vector2(0, 15f * player.box2Body.getMass()), player.box2Body.getWorldCenter(), true);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.box2Body.getLinearVelocity().x <= 10f) //if right key is being pressed or held down
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.box2Body.getLinearVelocity().x <= 75f) //if right key is being pressed or held down
         {
-            player.box2Body.applyLinearImpulse(new Vector2(10f, 0), player.box2Body.getWorldCenter(), true);
+            player.box2Body.applyLinearImpulse(new Vector2(50f * player.box2Body.getMass(), 0), player.box2Body.getWorldCenter(), true);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.box2Body.getLinearVelocity().x >= -10f) //if left key is being pressed or held down
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.box2Body.getLinearVelocity().x >= -75f) //if left key is being pressed or held down
         {
-            player.box2Body.applyLinearImpulse(new Vector2(-10f, 0), player.box2Body.getWorldCenter(), true);
+            player.box2Body.applyLinearImpulse(new Vector2(-50f * player.box2Body.getMass(), 0), player.box2Body.getWorldCenter(), true);
         }
     }
+
+
     @Override
     public void render(float delta)
     {
@@ -156,6 +162,14 @@ public class LevelOne implements Screen
         myGame.getBatch().end(); //close the batch
 
         myGame.getBatch().setProjectionMatrix(camera.combined); //updates our batch with our Camera's view and projection matrices.
+
+        if(player.isDead()) {
+            timer += delta;
+            if(timer > 3.0)
+            {
+                myGame.setState(GameState.ENDGAME);
+            }
+        }
     }
 
     @Override

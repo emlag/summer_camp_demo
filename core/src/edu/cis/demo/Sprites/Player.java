@@ -56,6 +56,7 @@ public class Player extends Sprite {
 
         previousState = State.STANDING;
         stateTimer = 0;
+        playerIsDead = false;
 
         //making animations
         Array<TextureRegion> frames = new Array<TextureRegion>(); //make sure to use the badlogic's Array
@@ -168,6 +169,10 @@ public class Player extends Sprite {
         //set to position of bottom left corner of box2dbody
         setPosition(box2Body.getPosition().x - getWidth() / 2, box2Body.getPosition().y - getHeight() / 2);
         setRegion(getFrame(dt));
+    }
+
+    public boolean isDead() {
+        return playerIsDead;
     }
 
     public void onEnemyHit()
