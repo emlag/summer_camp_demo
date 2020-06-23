@@ -2,6 +2,8 @@ package edu.cis.demo.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -26,6 +28,7 @@ import edu.cis.demo.Constants;
 import edu.cis.demo.DemoGame;
 import edu.cis.demo.GameState;
 import edu.cis.demo.Hud;
+import edu.cis.demo.InputListener;
 import edu.cis.demo.Sprites.Enemy;
 import edu.cis.demo.Sprites.Player;
 import edu.cis.demo.Utils.WorldContactListener;
@@ -45,6 +48,8 @@ public class LevelOne implements Screen
 
     private OrthographicCamera camera;
     private Viewport viewport;
+
+    private InputMultiplexer inputMultiplexer;
 
     //sprites
     private Player player;
@@ -94,6 +99,13 @@ public class LevelOne implements Screen
             fixtureDef.shape = shape;
             body.createFixture(fixtureDef);
         }
+
+        InputProcessor processor = new InputListener(player);
+
+        inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(processor);
+        inputMultiplexer.addProcessor(hud.getStage());
+        Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
     public TextureAtlas getAtlas(){

@@ -37,8 +37,6 @@ public class Hud
         viewport = new FitViewport(Constants.WIDTH, Constants.HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport);
 
-        Gdx.input.setInputProcessor(stage);
-
         table = new Table();
         table.top();
         table.setFillParent(true);

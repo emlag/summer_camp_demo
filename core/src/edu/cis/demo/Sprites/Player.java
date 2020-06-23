@@ -1,5 +1,6 @@
 package edu.cis.demo.Sprites;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -39,6 +40,7 @@ public class Player extends Sprite {
     public State previousState;
     private float stateTimer;
     private boolean runningToRight;
+    private String movement;
 
     private TextureRegion marioDead;
     private boolean playerIsDead;
@@ -51,6 +53,7 @@ public class Player extends Sprite {
         this.world = world;
         this.screen = screen;
         runningToRight = true;
+        this.movement = "";
 
         currentState = State.STANDING;
 
@@ -169,6 +172,7 @@ public class Player extends Sprite {
         //set to position of bottom left corner of box2dbody
         setPosition(box2Body.getPosition().x - getWidth() / 2, box2Body.getPosition().y - getHeight() / 2);
         setRegion(getFrame(dt));
+        changeMovement();
     }
 
     public boolean isDead() {
@@ -185,6 +189,29 @@ public class Player extends Sprite {
             fixture.setFilterData(filter);
         }
         box2Body.applyLinearImpulse(new Vector2(0, 4f), box2Body.getWorldCenter(), true); //for Mario to jump up when he dies
+    }
+
+    public void setMovement(String movement)
+    {
+        this.movement = movement;
+    }
+    public void changeMovement()
+    {
+        if(movement.equals(Constants.UP)) //if up button pressed
+        {
+            //2 ways to move objects in box2d, force (gradual change), and impulse (immediate change)
+            //2nd arg: where you want to apply the impulse.  Applying it at center bcs we don't want torque
+            //3rd arg: true = want to wake body up
+            this.box2Body.applyLinearImpulse(new Vector2(0, 15f * this.box2Body.getMass()), this.box2Body.getWorldCenter(), true);
+        }
+        if(movement.equals(Constants.RIGHT) && this.box2Body.getLinearVelocity().x <= 75f) //if right key is being pressed or held down
+        {
+            this.box2Body.applyLinearImpulse(new Vector2(50f * this.box2Body.getMass(), 0), this.box2Body.getWorldCenter(), true);
+        }
+        if(movement.equals(Constants.LEFT) && this.box2Body.getLinearVelocity().x >= -75f) //if left key is being pressed or held down
+        {
+            this.box2Body.applyLinearImpulse(new Vector2(-50f * this.box2Body.getMass(), 0), this.box2Body.getWorldCenter(), true);
+        }
     }
 
 }

@@ -32,4 +32,9 @@ public class Constants
     //collision
     public static final Integer PLAYER_ID = 99;
     public static final Integer GOOMBA_ID = 98;
+
+    //movement strings
+    public static final String UP = "up";
+    public static final String LEFT = "left";
+    public static final String RIGHT = "right";
 }
