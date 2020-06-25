@@ -33,6 +33,11 @@ public class DemoGame extends Game
 		previousState = GameState.LEVELONE;
 	}
 
+	public GameState getState()
+	{
+		return currentState;
+	}
+
 	public void setState(GameState newState) {
 		previousState = currentState;
 		currentState = newState;

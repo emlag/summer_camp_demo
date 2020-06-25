@@ -29,6 +29,7 @@ import edu.cis.demo.DemoGame;
 import edu.cis.demo.GameState;
 import edu.cis.demo.Scenes.Hud;
 import edu.cis.demo.InputListener;
+import edu.cis.demo.Scenes.Menu;
 import edu.cis.demo.Sprites.Enemy;
 import edu.cis.demo.Sprites.Player;
 import edu.cis.demo.Utils.WorldContactListener;
@@ -45,6 +46,7 @@ public class LevelOne implements Screen
     private OrthogonalTiledMapRenderer renderer;
 
     private Hud hud;
+    private Menu menu;
 
     private OrthographicCamera camera;
     private Viewport viewport;
@@ -67,6 +69,7 @@ public class LevelOne implements Screen
 
         this.myGame = game;
         this.hud = new Hud();
+        this.menu = new Menu(myGame);
 
         loadMap();
 
@@ -100,11 +103,12 @@ public class LevelOne implements Screen
             body.createFixture(fixtureDef);
         }
 
-        InputProcessor processor = new InputListener(player);
+        InputProcessor processor = new InputListener(player, myGame);
 
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(processor);
         inputMultiplexer.addProcessor(hud.getStage());
+        inputMultiplexer.addProcessor(menu.getStage());
         Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
@@ -133,31 +137,13 @@ public class LevelOne implements Screen
         renderer.setView(camera); //sets the view from our camera so it would render only what our camera can see.
     }
 
-    private void handleInput(float dt)
-    {
-        if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) //if up button pressed
-        {
-            //2 ways to move objects in box2d, force (gradual change), and impulse (immediate change)
-            //2nd arg: where you want to apply the impulse.  Applying it at center bcs we don't want torque
-            //3rd arg: true = want to wake body up
-            player.box2Body.applyLinearImpulse(new Vector2(0, 15f * player.box2Body.getMass()), player.box2Body.getWorldCenter(), true);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.box2Body.getLinearVelocity().x <= 75f) //if right key is being pressed or held down
-        {
-            player.box2Body.applyLinearImpulse(new Vector2(50f * player.box2Body.getMass(), 0), player.box2Body.getWorldCenter(), true);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.box2Body.getLinearVelocity().x >= -75f) //if left key is being pressed or held down
-        {
-            player.box2Body.applyLinearImpulse(new Vector2(-50f * player.box2Body.getMass(), 0), player.box2Body.getWorldCenter(), true);
-        }
-    }
-
-
     @Override
     public void render(float delta)
     {
-        handleInput(delta);
-        update(delta);
+        if(myGame.getState() != GameState.PAUSE)
+        {
+            update(delta);
+        }
 
         //clear screen
         Gdx.gl.glClearColor(0, 0 , 0 ,1);
@@ -181,6 +167,11 @@ public class LevelOne implements Screen
             {
                 myGame.setState(GameState.ENDGAME);
             }
+        }
+
+        if(myGame.getState() == GameState.PAUSE)
+        {
+            menu.getStage().draw();
         }
     }
 
