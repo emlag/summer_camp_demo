@@ -27,7 +27,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.cis.demo.Constants;
 import edu.cis.demo.DemoGame;
 import edu.cis.demo.GameState;
-import edu.cis.demo.Hud;
+import edu.cis.demo.Scenes.Hud;
 import edu.cis.demo.InputListener;
 import edu.cis.demo.Sprites.Enemy;
 import edu.cis.demo.Sprites.Player;

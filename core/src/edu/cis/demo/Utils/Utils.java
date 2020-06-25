@@ -1,6 +1,6 @@
 package edu.cis.demo.Utils;
 
-import edu.cis.demo.Hud;
+import edu.cis.demo.Scenes.Hud;
 
 public class Utils
 {
